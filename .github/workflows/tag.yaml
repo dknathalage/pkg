@@ -1,5 +1,4 @@
-# .github/workflows/release.yml
-name: Release
+name: Bump Version and Create Tag
 
 on:
   push:
@@ -8,11 +7,48 @@ on:
 
 jobs:
   tag:
+    name: Bump Version and Tag
     runs-on: ubuntu-latest
     steps:
-      - uses: K-Phoen/semver-release-action@master
+      - name: Checkout repository
+        uses: actions/checkout@v4
         with:
-          release_branch: main
-          release_strategy: tag
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Get latest tag
+        id: get-latest-tag
+        run: echo "LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo 'v0.0.0')" >> $GITHUB_ENV
+
+      - name: Determine new version
+        id: bump-version
+        run: |
+          LATEST_TAG=${{ env.LATEST_TAG }}
+          VERSION_PART="patch" # Change to "minor" or "major" if needed
+
+          # Extract numeric version
+          VERSION=${LATEST_TAG#v}
+          IFS='.' read -r MAJOR MINOR PATCH <<< "$VERSION"
+
+          if [ "$VERSION_PART" = "major" ]; then
+            MAJOR=$((MAJOR + 1))
+            MINOR=0
+            PATCH=0
+          elif [ "$VERSION_PART" = "minor" ]; then
+            MINOR=$((MINOR + 1))
+            PATCH=0
+          else
+            PATCH=$((PATCH + 1))
+          fi
+
+          NEW_TAG="v$MAJOR.$MINOR.$PATCH"
+          echo "NEW_TAG=$NEW_TAG" >> $GITHUB_ENV
+          echo "Bumping version: $LATEST_TAG -> $NEW_TAG"
+
+      - name: Create Git tag
+        run: |
+          git tag ${{ env.NEW_TAG }}
+          git push origin ${{ env.NEW_TAG }}
+
+      - name: Output new version
+        run: |
+          echo "New tag created: ${{ env.NEW_TAG }}"
