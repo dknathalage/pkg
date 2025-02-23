@@ -6,7 +6,6 @@ import (
 	"github.com/dknathalage/pkg/log"
 )
 
-// TestNewCliApp ensures that NewCliApp correctly initializes a CliApp instance.
 func TestNewCliApp(t *testing.T) {
 	app := NewCliApp()
 

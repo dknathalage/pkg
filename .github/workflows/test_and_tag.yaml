@@ -56,7 +56,7 @@ jobs:
         id: bump-version
         run: |
           LATEST_TAG=${{ env.LATEST_TAG }}
-          VERSION_PART="patch" # Change to "minor" or "major" if needed
+          VERSION_PART="patch"
 
           # Extract numeric version
           VERSION=${LATEST_TAG#v}
