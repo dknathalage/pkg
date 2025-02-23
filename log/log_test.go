@@ -8,7 +8,6 @@ import (
 	"testing"
 )
 
-// captureLogOutput is a helper function to capture log output for testing.
 func captureLogOutput(f func(l *Logger)) string {
 	r, w, _ := os.Pipe()
 	stdout := os.Stdout
@@ -25,7 +24,6 @@ func captureLogOutput(f func(l *Logger)) string {
 	return sb.String()
 }
 
-// Test logging with different levels.
 func TestLoggingLevels(t *testing.T) {
 	tests := []struct {
 		level   string
@@ -66,7 +64,6 @@ func TestLoggingLevels(t *testing.T) {
 	}
 }
 
-// Test logging with context
 func TestLoggingWithContext(t *testing.T) {
 	output := captureLogOutput(func(l *Logger) {
 		l.Error("Database connection failed", map[string]interface{}{
@@ -97,12 +94,11 @@ func TestLoggingWithContext(t *testing.T) {
 		t.Errorf("Expected host '127.0.0.1', got '%v'", logEntry.Context["host"])
 	}
 
-	if logEntry.Context["port"] != float64(5432) { // JSON unmarshals numbers as float64
+	if logEntry.Context["port"] != float64(5432) {
 		t.Errorf("Expected port 5432, got '%v'", logEntry.Context["port"])
 	}
 }
 
-// Test logging caller information
 func TestLoggingCallerInfo(t *testing.T) {
 	output := captureLogOutput(func(l *Logger) {
 		l.Error("Testing caller info")
