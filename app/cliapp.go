@@ -10,21 +10,21 @@ import (
 )
 
 // CliApp represents the root CLI application.
-type CliApp struct {
+type CliApp[T any] struct {
 	Name     string
 	Logger   *log.Logger
 	Commands *command.CommandSet
-	Config   interface{}
+	Config   T
 }
 
 // NewCliApp initializes a new CLI application with logging and a command set.
-func NewCliApp(AppName string, Config interface{}) *CliApp {
+func NewCliApp[T any](AppName string, Config T) *CliApp[T] {
 	// Ensure Config is a pointer to a struct
-	if Config == nil || reflect.TypeOf(Config).Kind() != reflect.Ptr || reflect.TypeOf(Config).Elem().Kind() != reflect.Struct {
+	if reflect.TypeOf(Config).Kind() != reflect.Ptr || reflect.TypeOf(Config).Elem().Kind() != reflect.Struct {
 		panic("Config must be a pointer to a struct")
 	}
 
-	cliapp := &CliApp{
+	cliapp := &CliApp[T]{
 		Name:   AppName,
 		Logger: log.NewLogger(),
 		Config: Config,
@@ -36,7 +36,7 @@ func NewCliApp(AppName string, Config interface{}) *CliApp {
 }
 
 // Run executes the CLI application.
-func (app *CliApp) Run() {
+func (app *CliApp[T]) Run() {
 	if err := LoadEnvWithPrefix(strings.ToUpper(app.Name), app.Config); err != nil {
 		app.Logger.Error(fmt.Sprintf("Error loading environment variables: %v", err))
 	}

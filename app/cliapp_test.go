@@ -15,6 +15,11 @@ func TestNewCliApp(t *testing.T) {
 	os.Setenv("APP_NAME_TEST", "hello")
 
 	app := NewCliApp("app_name", &TestConfig{})
+	app.Run()
+
+	if app.Config.Test != "hello" {
+		t.Fatalf("Expected Config value %s, got %s", "hello", app.Config.Test)
+	}
 
 	if app == nil {
 		t.Fatal("Expected CliApp instance, got nil")
