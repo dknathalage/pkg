@@ -1,13 +1,20 @@
 package app
 
 import (
+	"os"
 	"testing"
 
 	"github.com/dknathalage/pkg/log"
 )
 
+type TestConfig struct {
+	Test string
+}
+
 func TestNewCliApp(t *testing.T) {
-	app := NewCliApp("app_name", nil)
+	os.Setenv("APP_NAME_TEST", "hello")
+
+	app := NewCliApp("app_name", &TestConfig{})
 
 	if app == nil {
 		t.Fatal("Expected CliApp instance, got nil")
