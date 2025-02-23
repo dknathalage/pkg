@@ -74,7 +74,7 @@ func (cs *CommandSet) RegisterSubcommand(commandName, subcommandName, descriptio
 // Run executes the CLI by parsing arguments and dispatching the correct subcommand.
 func (cs *CommandSet) Run() error {
 	if len(os.Args) < 3 {
-		fmt.Printf("Usage: %s <command> <subcommand> [--flags]", cs.Name)
+		fmt.Printf("Usage: %s <command> <subcommand> [--flags]\n", cs.Name)
 		cs.PrintUsage()
 		return fmt.Errorf("missing command or subcommand")
 	}
