@@ -7,7 +7,7 @@ import (
 )
 
 func TestNewCliApp(t *testing.T) {
-	app := NewCliApp("app_name")
+	app := NewCliApp("app_name", nil)
 
 	if app == nil {
 		t.Fatal("Expected CliApp instance, got nil")
