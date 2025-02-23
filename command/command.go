@@ -4,6 +4,8 @@ import (
 	"flag"
 	"fmt"
 	"os"
+
+	"github.com/dknathalage/pkg/log"
 )
 
 // Command represents a CLI command with subcommands.
@@ -24,13 +26,15 @@ type Subcommand struct {
 // CommandSet holds all registered commands.
 type CommandSet struct {
 	Name     string
+	logger   log.Logger
 	Commands map[string]*Command
 }
 
 // NewCommandSet initializes a new command set.
-func NewCommandSet(Name string) *CommandSet {
+func NewCommandSet(Name string, Logger *log.Logger) *CommandSet {
 	return &CommandSet{
 		Name:     Name,
+		logger:   *Logger,
 		Commands: make(map[string]*Command),
 	}
 }

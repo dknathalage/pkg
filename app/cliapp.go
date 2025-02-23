@@ -7,16 +7,19 @@ import (
 
 // CliApp represents the root CLI application.
 type CliApp struct {
-	Log      *log.Logger
+	Logger   *log.Logger
 	Commands *command.CommandSet
 }
 
 // NewCliApp initializes a new CLI application with logging and a command set.
 func NewCliApp(AppName string) *CliApp {
-	return &CliApp{
-		Log:      log.NewLogger(),
-		Commands: command.NewCommandSet(AppName),
+	cliapp := &CliApp{
+		Logger: log.NewLogger(),
 	}
+
+	cliapp.Commands = command.NewCommandSet(AppName, cliapp.Logger)
+
+	return cliapp
 }
 
 // Run executes the CLI application.
