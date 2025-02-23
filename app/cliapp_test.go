@@ -1,10 +1,9 @@
 package app
 
 import (
+	"log/slog"
 	"os"
 	"testing"
-
-	"github.com/dknathalage/pkg/log"
 )
 
 type TestConfig struct {
@@ -29,7 +28,7 @@ func TestNewCliApp(t *testing.T) {
 		t.Fatal("Expected logger to be initialized, got nil")
 	}
 
-	_, ok := interface{}(app.Logger).(*log.Logger)
+	_, ok := interface{}(app.Logger).(*slog.Logger)
 	if !ok {
 		t.Fatal("Expected app.Log to be of type *log.Logger")
 	}

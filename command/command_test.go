@@ -4,11 +4,10 @@ import (
 	"bytes"
 	"flag"
 	"io"
+	"log/slog"
 	"os"
 	"strings"
 	"testing"
-
-	"github.com/dknathalage/pkg/log"
 )
 
 // captureOutput captures and returns CLI output for testing.
@@ -28,7 +27,7 @@ func captureOutput(f func() error) (string, error) {
 
 // TestNewCommandSet ensures the command set is initialized correctly.
 func TestNewCommandSet(t *testing.T) {
-	log := log.NewLogger()
+	log := slog.Default()
 	cs := NewCommandSet("app_name", log)
 	if cs == nil {
 		t.Fatal("Expected NewCommandSet() to return a non-nil value")
@@ -40,7 +39,7 @@ func TestNewCommandSet(t *testing.T) {
 
 // TestRegisterCommand verifies command registration.
 func TestRegisterCommand(t *testing.T) {
-	log := log.NewLogger()
+	log := slog.Default()
 	cs := NewCommandSet("app_name", log)
 	cs.RegisterCommand("test", "A test command")
 
@@ -55,7 +54,7 @@ func TestRegisterCommand(t *testing.T) {
 
 // TestRegisterSubcommand ensures subcommands are correctly registered.
 func TestRegisterSubcommand(t *testing.T) {
-	log := log.NewLogger()
+	log := slog.Default()
 	cs := NewCommandSet("app_name", log)
 	cs.RegisterCommand("test", "A test command")
 	cs.RegisterSubcommand("test", "sub", "A test subcommand", nil, func(args map[string]string) {})
@@ -76,7 +75,7 @@ func TestRegisterSubcommand(t *testing.T) {
 
 // TestRunWithInvalidCommand ensures Run handles unknown commands correctly.
 func TestRunWithInvalidCommand(t *testing.T) {
-	log := log.NewLogger()
+	log := slog.Default()
 	cs := NewCommandSet("app_name", log)
 	os.Args = []string{"app_name", "invalid", "sub"}
 	flag.CommandLine = flag.NewFlagSet(os.Args[0], flag.ExitOnError) // Reset flag parsing
@@ -94,7 +93,7 @@ func TestRunWithInvalidCommand(t *testing.T) {
 
 // TestRunWithInvalidSubcommand ensures Run handles unknown subcommands correctly.
 func TestRunWithInvalidSubcommand(t *testing.T) {
-	log := log.NewLogger()
+	log := slog.Default()
 	cs := NewCommandSet("app_name", log)
 	cs.RegisterCommand("test", "A test command")
 	os.Args = []string{"app_name", "test", "invalid"}
@@ -113,7 +112,7 @@ func TestRunWithInvalidSubcommand(t *testing.T) {
 
 // TestRunValidSubcommand ensures a registered subcommand executes properly.
 func TestRunValidSubcommand(t *testing.T) {
-	log := log.NewLogger()
+	log := slog.Default()
 	cs := NewCommandSet("app_name", log)
 	cs.RegisterCommand("test", "A test command")
 
@@ -137,7 +136,7 @@ func TestRunValidSubcommand(t *testing.T) {
 
 // TestFlagsParsing ensures flags are properly parsed and passed.
 func TestFlagsParsing(t *testing.T) {
-	log := log.NewLogger()
+	log := slog.Default()
 	cs := NewCommandSet("app_name", log)
 	cs.RegisterCommand("test", "A test command")
 
