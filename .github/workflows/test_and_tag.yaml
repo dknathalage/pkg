@@ -1,12 +1,43 @@
-name: Bump Version and Create Tag
+name: Run Tests
 
 on:
   push:
     branches:
       - main
+    paths:
+      - .github/workflows/test_and_tag.yaml
+      - "**/*.go"
+
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "**/*.go"
 
 jobs:
+  test:
+    name: Run Go Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: "1.23"
+
+      - name: Install dependencies
+        run: go mod tidy
+
+      - name: Run tests
+        run: go test -v ./...
+
   tag:
+    needs:
+      - test
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     name: Bump Version and Tag
     runs-on: ubuntu-latest
     permissions:
