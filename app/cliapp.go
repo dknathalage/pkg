@@ -12,10 +12,10 @@ type CliApp struct {
 }
 
 // NewCliApp initializes a new CLI application with logging and a command set.
-func NewCliApp() *CliApp {
+func NewCliApp(AppName string) *CliApp {
 	return &CliApp{
 		Log:      log.NewLogger(),
-		Commands: command.NewCommandSet(),
+		Commands: command.NewCommandSet(AppName),
 	}
 }
 

@@ -23,12 +23,14 @@ type Subcommand struct {
 
 // CommandSet holds all registered commands.
 type CommandSet struct {
+	Name     string
 	Commands map[string]*Command
 }
 
 // NewCommandSet initializes a new command set.
-func NewCommandSet() *CommandSet {
+func NewCommandSet(Name string) *CommandSet {
 	return &CommandSet{
+		Name:     Name,
 		Commands: make(map[string]*Command),
 	}
 }
@@ -68,7 +70,7 @@ func (cs *CommandSet) RegisterSubcommand(commandName, subcommandName, descriptio
 // Run executes the CLI by parsing arguments and dispatching the correct subcommand.
 func (cs *CommandSet) Run() error {
 	if len(os.Args) < 3 {
-		fmt.Println("Usage: app_name <command> <subcommand> [--flags]")
+		fmt.Printf("Usage: %s <command> <subcommand> [--flags]", cs.Name)
 		cs.PrintUsage()
 		return fmt.Errorf("missing command or subcommand")
 	}
