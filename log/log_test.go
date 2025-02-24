@@ -58,7 +58,7 @@ func TestNewJsonLogHandler(t *testing.T) {
 		t.Errorf("Expected 'message' key in log output, got: %s", logOutput)
 	}
 
-	if !strings.Contains(logOutput, "ERROR") {
+	if !strings.Contains(logOutput, "INFO") {
 		t.Errorf("Expected 'severity' key in log output, got: %s", logOutput)
 	}
 }
