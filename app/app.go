@@ -20,10 +20,10 @@ func (app *App) Run() {
 	}
 }
 
-func NewApp() *App {
+func NewApp(cliCommand *cli.Command) *App {
 	return &App{
 		Logger: slog.New(newJsonLogHandler()),
-		Cli:    &cli.Command{},
+		Cli:    cliCommand,
 	}
 }
 
