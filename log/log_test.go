@@ -2,34 +2,12 @@ package log
 
 import (
 	"bytes"
-	"log/slog"
 	"os"
 	"strings"
 	"testing"
 )
 
-func captureLogOutput(f func(logger *slog.Logger)) string {
-	// Create a pipe
-	r, w, _ := os.Pipe()
-	oldStderr := os.Stderr
-	os.Stderr = w
-
-	// Run the logger function
-	logger := NewJsonLogHandler()
-	f(logger)
-
-	// Close writer to flush, restore stderr
-	w.Close()
-	os.Stderr = oldStderr
-
-	// Read log output
-	var buf bytes.Buffer
-	_, _ = buf.ReadFrom(r)
-
-	return buf.String()
-}
-
-func TestNewJsonLogHandler(t *testing.T) {
+func TestNewJsonLogger(t *testing.T) {
 	// Create a pipe
 	r, w, _ := os.Pipe()
 
@@ -40,7 +18,7 @@ func TestNewJsonLogHandler(t *testing.T) {
 	os.Stderr = w
 
 	// Call the logger
-	logger := NewJsonLogHandler()
+	logger := NewJsonLogger()
 	logger.Info("Test log message")
 
 	// Close writer to flush data and restore stderr

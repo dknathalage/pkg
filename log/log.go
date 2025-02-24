@@ -5,7 +5,7 @@ import (
 	"os"
 )
 
-func NewJsonLogHandler() *slog.Logger {
+func NewJsonLogger() *slog.Logger {
 	h := slog.NewJSONHandler(os.Stderr, &slog.HandlerOptions{
 		AddSource: true,
 		Level:     slog.LevelInfo,
