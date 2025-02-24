@@ -1,23 +1,33 @@
 package app
 
 import (
+	"context"
+	"log"
 	"log/slog"
 	"os"
+
+	"github.com/urfave/cli/v3"
 )
 
 type App struct {
 	Logger *slog.Logger
+	Cli    *cli.Command
+}
+
+func (app *App) Run() {
+	if err := app.Cli.Run(context.Background(), os.Args); err != nil {
+		log.Fatal(err)
+	}
 }
 
 func NewApp() *App {
 	return &App{
 		Logger: slog.New(newJsonLogHandler()),
+		Cli:    &cli.Command{},
 	}
 }
 
 func newJsonLogHandler() *slog.JSONHandler {
-	const LevelCritical = slog.Level(12)
-
 	h := slog.NewJSONHandler(os.Stderr, &slog.HandlerOptions{
 		AddSource: true,
 		Level:     slog.LevelDebug,
@@ -28,10 +38,6 @@ func newJsonLogHandler() *slog.JSONHandler {
 				a.Key = "logging.googleapis.com/sourceLocation"
 			} else if a.Key == slog.LevelKey {
 				a.Key = "severity"
-				level := a.Value.Any().(slog.Level)
-				if level == LevelCritical {
-					a.Value = slog.StringValue("CRITICAL")
-				}
 			}
 			return a
 		},
